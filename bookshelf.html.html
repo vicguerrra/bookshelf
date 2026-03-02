@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bookshelf — Lanterns & Lore</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold-deep:    #b8860b;
+  --gold-bright:  #d4af37;
+  --gold-light:   #f0d070;
+  --gold-pale:    #faf3dc;
+  --parchment:    #fdf8ef;
+  --parchment-dk: #f5ead5;
+  --ink:          #2a1f0e;
+  --ink-light:    #4a3828;
+  --stone:        #e8dfc8;
+  --stone-dk:     #c8bfa8;
+  --border-orn:   #c9a84c;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--parchment);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23c9a84c' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── NAVBAR ── */
+.blog-nav {
+  background: linear-gradient(180deg, #1a1208 0%, #2a1f0e 100%);
+  border-bottom: 2px solid var(--gold-deep);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.blog-nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+}
+.blog-nav-logo {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 1.4rem;
+  color: var(--gold-light);
+  text-decoration: none;
+  padding: 12px 0;
+  text-shadow: 0 0 12px rgba(212,175,55,0.4);
+  white-space: nowrap;
+}
+.blog-nav-links { display: flex; }
+.blog-nav-links a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--stone); text-decoration: none;
+  padding: 14px 16px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.blog-nav-links a:hover { color: var(--gold-light); background: rgba(212,175,55,0.08); }
+.blog-nav-links a.active { color: var(--gold-bright); border-bottom: 2px solid var(--gold-bright); }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  text-align: center;
+  padding: 48px 24px 32px;
+}
+.page-header h1 {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--ink);
+  text-shadow: 1px 2px 0 rgba(201,168,76,0.4);
+  margin-bottom: 8px;
+}
+.page-header p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--ink-light);
+  font-size: 1rem;
+  opacity: 0.8;
+}
+.orn-divider {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--gold-deep);
+  margin: 14px auto; max-width: 400px;
+}
+.orn-divider::before, .orn-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-orn), transparent);
+}
+
+/* ── MAIN ── */
+.main-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--parchment-dk), var(--parchment));
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 2px;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold-deep);
+  line-height: 1;
+  display: block;
+}
+.stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  opacity: 0.7;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── FILTER CONTROLS ── */
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.filter-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  white-space: nowrap;
+}
+.filter-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.filter-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.4);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 1px;
+}
+.filter-btn:hover {
+  color: var(--gold-deep);
+  border-color: var(--gold-deep);
+  background: rgba(201,168,76,0.06);
+}
+.filter-btn.active {
+  color: var(--parchment);
+  background: var(--gold-deep);
+  border-color: var(--gold-deep);
+}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  display: flex;
+  gap: 0;
+  margin-left: auto;
+  border: 1px solid rgba(201,168,76,0.4);
+  overflow: hidden;
+  border-radius: 2px;
+}
+.view-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  background: transparent;
+  border: none;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-right: 1px solid rgba(201,168,76,0.4);
+}
+.view-btn:last-child { border-right: none; }
+.view-btn.active {
+  background: var(--gold-deep);
+  color: var(--parchment);
+}
+
+/* ── SECTION HEADERS (for author/genre/year grouping) ── */
+.bs-section {
+  margin-bottom: 40px;
+}
+.bs-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.bs-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.bs-section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-orn), transparent);
+}
+.bs-section-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-deep);
+  white-space: nowrap;
+}
+
+/* ── BOOKS GRID ── */
+.bs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+/* ── BOOK CARD ── */
+.bs-book {
+  width: 110px;
+  position: relative;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+.bs-book:hover { transform: translateY(-5px); }
+.bs-book.hidden { display: none; }
+
+.bs-cover-wrap {
+  width: 110px;
+  height: 168px;
+  position: relative;
+  border: 1px solid var(--border-orn);
+  box-shadow: 3px 5px 16px rgba(0,0,0,0.22);
+  overflow: hidden;
+  background: var(--stone);
+}
+.bs-cover-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.bs-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 10px; text-align: center;
+  background: linear-gradient(160deg, var(--parchment-dk), var(--stone));
+}
+.bs-placeholder span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem; font-weight: 600;
+  color: var(--ink-light); line-height: 1.3;
+}
+.bs-link {
+  position: absolute; inset: 0; z-index: 2;
+  text-decoration: none;
+}
+.bs-stars {
+  display: flex; justify-content: center;
+  gap: 2px; margin-top: 7px; font-size: 0.72rem;
+}
+.bs-star-full  { color: var(--gold-deep); }
+.bs-star-empty { color: var(--stone-dk); }
+.bs-title {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-style: italic; font-size: 0.72rem;
+  color: var(--ink); text-align: center;
+  margin-top: 5px; line-height: 1.3;
+}
+.bs-author-label {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.65rem; color: var(--ink-light);
+  text-align: center; margin-top: 2px; opacity: 0.7;
+}
+.bs-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--stone);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem; padding: 6px 10px;
+  border: 1px solid var(--gold-deep);
+  z-index: 10; pointer-events: none;
+  max-width: 180px; text-align: center;
+  line-height: 1.4;
+}
+.bs-tooltip::after {
+  content: '';
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--gold-deep);
+}
+.bs-book:hover .bs-tooltip { display: block; }
+
+/* ── EMPTY STATE ── */
+.bs-empty {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--stone-dk);
+  text-align: center;
+  padding: 40px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .bs-book { width: 85px; }
+  .bs-cover-wrap { width: 85px; height: 130px; }
+  .blog-nav-logo { font-size: 1.1rem; }
+  .blog-nav-links a { padding: 12px 10px; font-size: 0.58rem; }
+  .page-header { padding: 32px 16px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="blog-nav">
+  <div class="blog-nav-inner">
+    <a class="blog-nav-logo" href="https://lanternslore.blogspot.com">lanterns &amp; lore</a>
+    <div class="blog-nav-links">
+      <a href="https://lanternslore.blogspot.com">Home</a>
+      <a href="https://lanternslore.blogspot.com/search/label/Reviews">Reviews</a>
+      <a href="https://vicguerrra.github.io/lanterns-lore/">Reading Projects</a>
+      <a href="#" class="active">Bookshelf</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>The Bookshelf</h1>
+  <div class="orn-divider">&#9670;</div>
+  <p>Every book I have ever read, carefully catalogued by candlelight</p>
+</div>
+
+<div class="main-wrap">
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num" id="stat-total">0</span>
+      <span class="stat-label">Books Read</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="stat-authors">0</span>
+      <span class="stat-label">Authors</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="stat-genres">0</span>
+      <span class="stat-label">Genres</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="stat-avg">—</span>
+      <span class="stat-label">Avg. Rating</span>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="filter-controls">
+    <span class="filter-label">View by</span>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('year', this)">Year</button>
+      <button class="view-btn" onclick="setView('author', this)">Author</button>
+      <button class="view-btn" onclick="setView('genre', this)">Genre</button>
+    </div>
+  </div>
+
+  <!-- GENRE FILTER (shown only in genre view) -->
+  <div class="filter-controls" id="genre-filter" style="display:none;">
+    <span class="filter-label">Filter</span>
+    <div class="filter-btns" id="genre-btns"></div>
+  </div>
+
+  <!-- BOOKS CONTAINER -->
+  <div id="books-container"></div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// ADICIONE SEUS LIVROS AQUI
+// Campos:
+//   title   — título do livro
+//   author  — autor (Sobrenome, Nome para ordenar alfabeticamente)
+//   year    — ano em que você leu
+//   rating  — nota de 1 a 5
+//   genres  — array com gêneros (use os mesmos nomes sempre)
+//   cover   — URL da capa (deixe '' para placeholder)
+//   review  — URL da resenha (deixe '' se não tiver)
+// ══════════════════════════════════════════════════════
+var BOOKS = [
+  // Exemplo (remova ou edite):
+  {
+    title:  "Assassin's Apprentice",
+    author: "Hobb, Robin",
+    year:   2026,
+    rating: 5,
+    genres: ["Fantasy"],
+    cover:  "",
+    review: ""
+  },
+  // Adicione mais livros seguindo o mesmo padrão:
+  // {
+  //   title:  "TÍTULO",
+  //   author: "SOBRENOME, Nome",
+  //   year:   2026,
+  //   rating: 4,
+  //   genres: ["Fantasy", "Horror"],
+  //   cover:  "https://url-da-capa.jpg",
+  //   review: "https://url-da-resenha"
+  // },
+];
+
+// Gêneros disponíveis (adicione mais se precisar)
+var ALL_GENRES = ["Fantasy","Science Fiction","Horror","Mystery & Thriller","Classics","Romance"];
+
+// ══════════════════════════════════════════════════════
+// ENGINE — não precisa editar abaixo
+// ══════════════════════════════════════════════════════
+var currentView   = 'year';
+var activeGenre   = 'all';
+
+function stars(rating) {
+  var h = '';
+  for (var i = 1; i <= 5; i++) {
+    h += '<span class="' + (i <= rating ? 'bs-star-full' : 'bs-star-empty') + '">&#9733;</span>';
+  }
+  return '<div class="bs-stars">' + h + '</div>';
+}
+
+function bookCard(b) {
+  var coverHtml = b.cover
+    ? '<img src="' + b.cover + '" alt="' + b.title + '" loading="lazy"/>'
+    : '<div class="bs-placeholder"><span>' + b.title + '</span></div>';
+  var linkHtml = b.review
+    ? '<a class="bs-link" href="' + b.review + '" title="Read review"></a>'
+    : '';
+  return '<div class="bs-book">'
+    + '<div class="bs-cover-wrap">' + coverHtml + linkHtml + '</div>'
+    + stars(b.rating)
+    + '<div class="bs-title">' + b.title + '</div>'
+    + '<div class="bs-author-label">' + b.author.split(',').reverse().join(' ').trim() + '</div>'
+    + '<div class="bs-tooltip">' + b.title + '<br/><em>' + b.author.split(',').reverse().join(' ').trim() + '</em></div>'
+    + '</div>';
+}
+
+function section(title, books) {
+  if (!books.length) return '';
+  return '<div class="bs-section">'
+    + '<div class="bs-section-header">'
+    + '<div class="bs-section-title">' + title + '</div>'
+    + '<div class="bs-section-line"></div>'
+    + '<div class="bs-section-count">' + books.length + (books.length === 1 ? ' book' : ' books') + '</div>'
+    + '</div>'
+    + '<div class="bs-grid">' + books.map(bookCard).join('') + '</div>'
+    + '</div>';
+}
+
+function groupBy(arr, keyFn) {
+  var map = {};
+  arr.forEach(function(b) {
+    var k = keyFn(b);
+    if (!map[k]) map[k] = [];
+    map[k].push(b);
+  });
+  return map;
+}
+
+function render() {
+  var books = BOOKS.slice();
+  var html  = '';
+
+  if (currentView === 'year') {
+    books.sort(function(a, b) { return b.year - a.year; });
+    var byYear = groupBy(books, function(b) { return b.year; });
+    var years  = Object.keys(byYear).sort(function(a, b) { return b - a; });
+    years.forEach(function(y) {
+      html += section(y, byYear[y]);
+    });
+  }
+
+  else if (currentView === 'author') {
+    books.sort(function(a, b) { return a.author.localeCompare(b.author); });
+    // group by first letter of last name
+    var byLetter = groupBy(books, function(b) { return b.author[0].toUpperCase(); });
+    var letters  = Object.keys(byLetter).sort();
+    letters.forEach(function(l) {
+      html += section(l, byLetter[l]);
+    });
+  }
+
+  else if (currentView === 'genre') {
+    var filtered = activeGenre === 'all'
+      ? books
+      : books.filter(function(b) { return b.genres.indexOf(activeGenre) !== -1; });
+    filtered.sort(function(a, b) { return a.title.localeCompare(b.title); });
+    if (filtered.length) {
+      html = '<div class="bs-section"><div class="bs-grid">' + filtered.map(bookCard).join('') + '</div></div>';
+    } else {
+      html = '<div class="bs-empty">No books found in this genre yet.</div>';
+    }
+  }
+
+  if (!html) html = '<div class="bs-empty">The shelves are empty for now — come back soon.</div>';
+  document.getElementById('books-container').innerHTML = html;
+}
+
+function setView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.view-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('genre-filter').style.display = view === 'genre' ? 'flex' : 'none';
+  render();
+}
+
+function setGenre(genre, btn) {
+  activeGenre = genre;
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function buildStats() {
+  var total   = BOOKS.length;
+  var authors = new Set(BOOKS.map(function(b) { return b.author; })).size;
+  var genres  = new Set(BOOKS.reduce(function(acc, b) { return acc.concat(b.genres); }, [])).size;
+  var rated   = BOOKS.filter(function(b) { return b.rating; });
+  var avg     = rated.length
+    ? (rated.reduce(function(s, b) { return s + b.rating; }, 0) / rated.length).toFixed(1)
+    : '—';
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-authors').textContent = authors;
+  document.getElementById('stat-genres').textContent  = genres;
+  document.getElementById('stat-avg').textContent     = avg;
+}
+
+function buildGenreButtons() {
+  var usedGenres = new Set(BOOKS.reduce(function(a, b) { return a.concat(b.genres); }, []));
+  var btns = '<button class="filter-btn active" onclick="setGenre(\'all\', this)">All</button>';
+  ALL_GENRES.forEach(function(g) {
+    if (usedGenres.has(g)) {
+      btns += '<button class="filter-btn" onclick="setGenre(\'' + g + '\', this)">' + g + '</button>';
+    }
+  });
+  document.getElementById('genre-btns').innerHTML = btns;
+}
+
+buildStats();
+buildGenreButtons();
+render();
+</script>
+</body>
+</html>
